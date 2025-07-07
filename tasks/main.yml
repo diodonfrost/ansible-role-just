@@ -1,0 +1,5 @@
+---
+# tasks file for just
+
+- name: Include OS specific variables.
+  ansible.builtin.include_vars: "{{ ansible_system }}.yml"

@@ -1,0 +1,41 @@
+galaxy_info:
+  role_name: just
+  author: diodonfrost
+  company: diodonfrost
+  description: Ansible role for install the latest version of Just
+  license: Apache Software License 2.0
+
+  min_ansible_version: 2.9.0
+
+  platforms:
+    - name: EL
+      versions:
+        - all
+    - name: Fedora
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - all
+    - name: FreeBSD
+      versions:
+        - all
+    - name: OpenBSD
+      versions:
+        - all
+    - name: MacOSX
+      versions:
+        - all
+    - name: Windows
+      versions:
+        - all
+
+  galaxy_tags:
+    - rust
+    - utils
+    - development
+
+dependencies: []
