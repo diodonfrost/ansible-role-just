@@ -1,7 +1,5 @@
 ---
 - name: Converge
   hosts: all
-  tasks:
-    - name: "Include ansible-role-just"
-      ansible.builtin.include_role:
-        name: "ansible-role-just"
+  roles:
+    - role: diodonfrost.just

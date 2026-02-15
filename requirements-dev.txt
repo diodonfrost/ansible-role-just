@@ -1,9 +1,5 @@
-
-ansible-compat == 4.*
-ansible-lint == 24.*
-molecule == 24.*
-molecule-plugins[docker] == 23.*
-molecule-plugins[vagrant] == 23.*
-pywinrm  == 0.*
-pre-commit == 4.*
-yamllint == 1.*
+ansible-compat == 25.*
+ansible-lint == 25.*
+molecule == 25.1.* # https://github.com/ansible-community/molecule-plugins/issues/301
+molecule-plugins[docker,vagrant] == 25.*
+pre_commit == 4.*

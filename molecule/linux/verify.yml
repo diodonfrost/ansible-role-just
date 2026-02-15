@@ -2,6 +2,13 @@
 - name: Verify
   hosts: all
   tasks:
-    - name: Example assertion
+    - name: Linux | Just should be functional
+      ansible.builtin.command: just --version
+      register: just_result
+      changed_when: false
+
+    - name: Linux | Verify commands outputs
       ansible.builtin.assert:
-        that: true
+        that:
+          - just_result.rc == 0
+        success_msg: "All tests passed"
