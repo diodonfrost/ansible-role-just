@@ -2,4 +2,14 @@
 # tasks file for just
 
 - name: Include OS specific variables.
-  ansible.builtin.include_vars: "{{ ansible_system }}.yml"
+  ansible.builtin.include_vars: "{{ ansible_facts['system'] }}.yml"
+
+- name: Install Just
+  ansible.builtin.include_tasks: "{{ lookup('ansible.builtin.first_found', params) }}"
+  vars:
+    params:
+      files:
+        - "setup-{{ ansible_facts['system'] }}.yml"
+        - "setup-Linux-Unix.yml"
+      paths:
+        - "tasks"

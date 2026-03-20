@@ -1,2 +1,6 @@
 ---
 # defaults file for just
+
+# Define just package name
+# Default: just (same on most systems)
+just_package_name: "{{ _just_package_name }}"

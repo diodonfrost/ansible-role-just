@@ -1,0 +1,12 @@
+---
+# tasks file for install Just on Windows system via winget
+
+- name: Windows | Check if Just is installed
+  ansible.windows.win_command: "winget list --id {{ just_package_name }} --exact --accept-source-agreements"
+  register: just_installed
+  changed_when: false
+  failed_when: false
+
+- name: Windows | Install Just
+  ansible.windows.win_command: "winget install --id {{ just_package_name }} --exact --accept-source-agreements --accept-package-agreements"
+  when: just_installed.rc != 0

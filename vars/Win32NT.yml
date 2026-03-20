@@ -1,1 +1,3 @@
 ---
+# vars file for just in Windows system
+_just_package_name: Casey.Just

@@ -1,1 +1,3 @@
 ---
+# vars file for just in OpenBSD system
+_just_package_name: just

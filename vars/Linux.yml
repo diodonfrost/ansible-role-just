@@ -1,1 +1,3 @@
 ---
+# vars file for just in Linux system
+_just_package_name: just
