@@ -1,31 +1,65 @@
 ansible-role-just
 =============
 
-Ansible role for install the latest version of Just
+[![molecule](https://github.com/diodonfrost/ansible-role-just/workflows/molecule/badge.svg)](https://github.com/diodonfrost/ansible-role-just/actions)
+[![Ansible Galaxy](https://img.shields.io/badge/galaxy-diodonfrost.just-660198.svg)](https://galaxy.ansible.com/diodonfrost/just)
 
-Requirements
-------------
-
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Ansible role that installs [`just`](https://github.com/casey/just), the handy command runner, on Linux, macOS, FreeBSD, OpenBSD, and Windows.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+All variables are defined in `defaults/main.yml` and may be overridden at play or inventory scope.
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `just_install_method` | `package` | How to install `just`. Set to `package` to use the OS package manager, or `binary` to download the release archive from GitHub (Linux/macOS only). |
+| `just_version` | `latest` | Version to install when `just_install_method: binary`. `latest` queries the GitHub releases API; otherwise provide a tag such as `1.36.0`. Ignored for `package` installs. |
+| `just_package_name` | OS-specific (`just`, or `Casey.Just` on Windows) | Package name passed to the target's package manager. |
+| `just_pkg_url` | OS-specific | Full URL of the tarball to download when `just_install_method: binary`. Templated from `just_version` and the host's architecture; override only to mirror releases or pin to a custom build. |
+| `just_path` | `/usr/local/bin/` on Linux/macOS | Directory where the `just` binary is extracted when `just_install_method: binary`. |
+
+Architecture detection for binary installs uses a map (`_just_arch` in `vars/main.yml`) from Ansible's `architecture` fact to the arch segment used in the GitHub release asset names. `x86_64`, `amd64`, `aarch64`, `armv7l`, `arm`, and `i386` are supported out of the box; unknown values fall back to `x86_64`.
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None. The role has no hard dependencies on other Galaxy roles or collections. The Molecule test scenarios use `diodonfrost.update_package_manager_cache` and `ansible.windows` to prepare test hosts, but those are not required when consuming the role.
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Install `just` from the OS package manager (default):
 
-    - hosts: servers
-      roles:
-         - role: diodonfrost.just
+```yaml
+- hosts: servers
+  roles:
+    - role: diodonfrost.just
+```
+
+Install a specific version from upstream release tarballs (Linux/macOS):
+
+```yaml
+- hosts: servers
+  roles:
+    - role: diodonfrost.just
+      vars:
+        just_install_method: binary
+        just_version: 1.36.0
+        just_path: /usr/local/bin/
+```
+
+Install the latest release to a user-writable directory:
+
+```yaml
+- hosts: servers
+  roles:
+    - role: diodonfrost.just
+      vars:
+        just_install_method: binary
+        just_version: latest
+        just_path: "{{ ansible_env.HOME }}/.local/bin/"
+```
 
 Local Testing
 -------------
@@ -50,34 +84,31 @@ Testing with Docker
 # Install requirements
 pip install -r requirements-dev.txt
 
-# Test ansible role with ubuntu 22.04
+# Test ansible role with ubuntu 26.04
 molecule test
 
-# Test ansible role with ubuntu 20.04
-image=ansible-ubuntu:20.04 molecule test
+# Test ansible role with debian 13
+image=ansible-debian:13 molecule test
 
 # Test ansible role with alpine latest
 image=ansible-alpine:latest molecule test
 
-# Create centos 7 instance
-image=ansible-centos:7 molecule create
+# Create debian 13 instance
+image=ansible-debian:13 molecule create
 
-# Apply role on centos 7 instance
-image=ansible-centos:7 molecule converge
+# Apply role on debian 13 instance
+image=ansible-debian:13 molecule converge
 
-# Launch tests on centos 7 instance
-image=ansible-centos:7 molecule verify
+# Launch tests on debian 13 instance
+image=ansible-debian:13 molecule verify
 ```
 
 Testing with Vagrant and Libvirt
 --------------------------------
 
 ```shell
-# Test ansible role with FreeBSD
-molecule test -s freebsd
-
-# Test ansible role with OpenBSD
-molecule test -s openbsd
+# Test ansible role with Linux
+molecule test -s linux
 
 # Test ansible role with Windows
 molecule test -s windows
