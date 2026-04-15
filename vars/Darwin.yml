@@ -1,3 +1,5 @@
 ---
 # vars file for just in macOS system
 _just_package_name: just
+_just_pkg_url: "https://github.com/casey/just/releases/download/{{ _just_version }}/just-{{ _just_version }}-{{ _just_arch[ansible_facts['architecture']] | default('x86_64') }}-apple-darwin.tar.gz"
+_just_default_path: /usr/local/bin/

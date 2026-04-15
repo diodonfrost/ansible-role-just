@@ -1,6 +1,24 @@
 ---
 # defaults file for just
 
+# Define just install method
+# Possible values: package, binary
+# Default: package
+just_install_method: package
+
+# Define just version to install (only used when just_install_method is 'binary')
+# Possible values: latest, or a specific version (e.g., '1.36.0')
+# Default: latest
+just_version: latest
+
 # Define just package name
 # Default: just (same on most systems)
 just_package_name: "{{ _just_package_name }}"
+
+# Define url where to download just binary (only used when just_install_method is 'binary')
+# Default: use local system path defined in Ansible vars/*.yml
+just_pkg_url: "{{ _just_pkg_url }}"
+
+# Define where to install just binary (only used when just_install_method is 'binary')
+# Default: use local system path defined in Ansible vars/*.yml
+just_path: "{{ _just_default_path }}"

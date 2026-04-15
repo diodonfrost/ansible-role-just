@@ -1,0 +1,42 @@
+---
+# tasks file for install Just on Linux/Unix system via binary
+
+- name: Linux/Unix | Find the latest version of Just
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/casey/just/releases/latest
+    return_content: true
+    headers:
+      Accept: application/vnd.github.v3+json
+      User-Agent: Ansible
+  check_mode: false
+  retries: 3
+  delay: 5
+  register: just_latest_release
+  when: just_version == "latest"
+
+- name: Linux/Unix | Use the latest Just version when latest var is defined
+  ansible.builtin.set_fact:
+    _just_version: "{{ (just_latest_release.content | from_json).tag_name }}"
+  when: just_version == 'latest'
+
+- name: Linux/Unix | Use the specified Just version when latest var is not defined
+  ansible.builtin.set_fact:
+    _just_version: "{{ just_version }}"
+  when: just_version != 'latest'
+
+# This task avoids downloading Just every time
+- name: Linux/Unix | Check if Just is present with the right version
+  ansible.builtin.command: "{{ just_path }}/just --version"
+  register: just_installed_version
+  ignore_errors: true
+  changed_when: false
+  failed_when: false
+
+- name: Linux/Unix | Install Just
+  ansible.builtin.unarchive:
+    src: "{{ just_pkg_url }}"
+    dest: "{{ just_path }}"
+    remote_src: true
+    include:
+      - just
+  when: _just_version not in ( just_installed_version.stdout_lines | default(['empty'], true) | first )

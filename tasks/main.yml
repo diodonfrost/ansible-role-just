@@ -4,7 +4,7 @@
 - name: Include OS specific variables.
   ansible.builtin.include_vars: "{{ ansible_facts['system'] }}.yml"
 
-- name: Install Just
+- name: Install Just via package manager
   ansible.builtin.include_tasks: "{{ lookup('ansible.builtin.first_found', params) }}"
   vars:
     params:
@@ -13,3 +13,8 @@
         - "setup-Linux-Unix.yml"
       paths:
         - "tasks"
+  when: just_install_method == 'package'
+
+- name: Install Just via binary
+  ansible.builtin.include_tasks: setup-binary.yml
+  when: just_install_method == 'binary'

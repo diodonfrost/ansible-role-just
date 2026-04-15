@@ -1,3 +1,4 @@
 ---
 # vars file for just in FreeBSD system
 _just_package_name: just
+_just_default_path: /usr/local/bin/
