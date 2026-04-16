@@ -8,5 +8,5 @@
   failed_when: false
 
 - name: Windows | Install Just
-  ansible.windows.win_command: "winget install --id {{ just_package_name }} --exact --accept-source-agreements --accept-package-agreements"
+  ansible.windows.win_command: "winget install --id {{ just_package_name }} --exact"
   when: just_installed.rc != 0
