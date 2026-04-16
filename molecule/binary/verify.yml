@@ -1,0 +1,45 @@
+---
+- name: Verify
+  hosts: all
+  tasks:
+    - name: Linux | Just should be installed in the expected path
+      ansible.builtin.stat:
+        path: /usr/local/bin/just
+      register: just_binary
+
+    - name: Linux | Verify just binary exists
+      ansible.builtin.assert:
+        that:
+          - just_binary.stat.exists
+          - just_binary.stat.executable
+        success_msg: "Just binary is present and executable"
+
+    - name: Linux | Just should be functional
+      ansible.builtin.command: just --version
+      register: just_result
+      changed_when: false
+
+    - name: Linux | Verify just command output
+      ansible.builtin.assert:
+        that:
+          - just_result.rc == 0
+          - "'just' in just_result.stdout"
+        success_msg: "All tests passed"
+
+    - name: Linux | Run role again to test idempotency
+      ansible.builtin.include_role:
+        name: diodonfrost.just
+      vars:
+        just_install_method: binary
+
+    - name: Linux | Just should still be functional after re-run
+      ansible.builtin.command: just --version
+      register: just_result_idempotent
+      changed_when: false
+
+    - name: Linux | Verify idempotent run
+      ansible.builtin.assert:
+        that:
+          - just_result_idempotent.rc == 0
+          - just_result_idempotent.stdout == just_result.stdout
+        success_msg: "Idempotency test passed"

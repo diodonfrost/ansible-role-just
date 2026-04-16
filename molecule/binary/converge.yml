@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  roles:
+    - role: diodonfrost.just
+      vars:
+        just_install_method: binary
