@@ -1,0 +1,35 @@
+---
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+driver:
+  name: vagrant
+  provider:
+    name: libvirt
+platforms:
+  - name: just-windows-10
+    box: diodonfrost/windows-10
+    memory: 4096
+    cpus: 4
+    config_options:
+      vm.boot_timeout: 600
+      vm.communicator: "winrm"
+      winrm.username: "vagrant"
+      winrm.password: "vagrant"
+provisioner:
+  name: ansible
+  options:
+    extra-vars: "{
+      'ansible_become': 'false',
+      'ansible_user': 'vagrant',
+      'ansible_password': 'vagrant',
+      'ansible_port': '5985',
+      'ansible_connection': 'winrm',
+      'ansible_winrm_transport': 'ntlm',
+      'ansible_winrm_server_cert_validation': 'ignore',
+      'ansible_shell_type': 'powershell',
+      'ansible_shell_executable': 'None'
+    }"
+verifier:
+  name: ansible

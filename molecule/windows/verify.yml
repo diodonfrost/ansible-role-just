@@ -1,0 +1,14 @@
+---
+- name: Verify
+  hosts: all
+  tasks:
+    - name: Windows | Just should be functional
+      ansible.windows.win_command: just --version
+      register: just_result
+      changed_when: false
+
+    - name: Windows | Verify commands outputs
+      ansible.builtin.assert:
+        that:
+          - just_result.rc == 0
+        success_msg: "All tests passed"
