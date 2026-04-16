@@ -3,8 +3,8 @@
 
 # Define just install method
 # Possible values: package, binary
-# Default: package
-just_install_method: package
+# Default: binary
+just_install_method: binary
 
 # Define just version to install (only used when just_install_method is 'binary')
 # Possible values: latest, or a specific version (e.g., '1.36.0')
